@@ -1,6 +1,9 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -34,6 +37,9 @@ class _HomePageState extends State<HomePage> {
             "https://api.openweathermap.org/data/2.5/forecast?q=$city&APPID=${dotenv.env['WEATHER_SECRET_KEYS']}"),
       );
       final data = jsonDecode(res.body);
+      if (kDebugMode) {
+        print("response data: $data");
+      }
       if (data['cod'] == '404') {
         throw data['message'];
       }
@@ -111,7 +117,7 @@ class _HomePageState extends State<HomePage> {
           final data = snapshot.data!;
 
           final currentTemperature =
-              (data['list'][0]['main']['temp'] - 273 as double)
+              ((data['list'][0]['main']['temp'] - 273.00) as double)
                   .toStringAsFixed(2);
           final currentSky = data['list'][0]['weather'][0]['main'];
           final location =
@@ -142,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                       Icons.refresh,
                       size: 34,
                     ),
-                  ),
+                  )
                 ],
                 title: const Text(
                   "Weather App",
